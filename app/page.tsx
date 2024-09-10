@@ -11,7 +11,7 @@ const initialState = {
   title: '',
   description: '',
 }
-function reducer(state, action) {
+function reducer(state: any, action: any) {
   switch (action.type) {
     case 'fetch':
       return { ...state, data: action.payload }
@@ -48,7 +48,7 @@ const Home = () => {
     fetchTodo();
   }, [])
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault()
     const { title, description } = state;
     const { data: todoData, error } = await supabase.from('todo').insert({ Title: title, Description: description }).select()
