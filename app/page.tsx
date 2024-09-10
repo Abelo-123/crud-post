@@ -4,9 +4,9 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
-const SupabaseChecker = () => {
+const Home = () => {
   const [status, setStatus] = useState('Checking...');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const checkConnection = async () => {
@@ -23,9 +23,14 @@ const SupabaseChecker = () => {
         } else {
           setStatus('Supabase is connected, but no data found.');
         }
-      } catch (err: any) {
-        setStatus('Failed to connect to Supabase.');
-        setError(err.message);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setStatus('Failed to connect to Supabase.');
+          setError(err.message);
+        } else {
+          // Handle unexpected error types
+          setStatus('Failed to connect to Supabase.');
+        }
       }
     };
 
@@ -43,4 +48,4 @@ const SupabaseChecker = () => {
   );
 };
 
-export default SupabaseChecker;
+export default Home;
