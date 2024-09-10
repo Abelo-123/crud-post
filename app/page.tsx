@@ -4,14 +4,28 @@
 import { useEffect, useReducer } from 'react';
 import { supabase } from '../lib/supabaseClient'
 
+interface data {
+  title: string;
+  description: string;
+}
+interface state {
+  title: string;
+  description: string;
+  data?: data[];
+}
 
-
+interface action {
+  type: 'fetch' | 'add' | 'reset',
+  title?: string;
+  desc?: string;
+  payload?: data[];
+}
 const initialState = {
   data: [],
   title: '',
   description: '',
 }
-function reducer(state: any, action: any) {
+function reducer(state: state, action: action) {
   switch (action.type) {
     case 'fetch':
       return { ...state, data: action.payload }
@@ -48,7 +62,7 @@ const Home = () => {
     fetchTodo();
   }, [])
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const { title, description } = state;
     const { data: todoData, error } = await supabase.from('todo').insert({ Title: title, Description: description }).select()
