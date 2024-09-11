@@ -1,18 +1,28 @@
-'use client'
+'use client';
+
 import React, { useState } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
 const Auth = () => {
-    const [error, setError] = useState<string | null>(null);
     const { data: session, status } = useSession();
-
+    const [error, setError] = useState<string | null>(null);
     const handleSignIn = async (provider: string) => {
-        const result = await signIn(provider, { redirect: false });
+        try {
+            const result = await signIn(provider, { redirect: false });
 
-        if (result?.error) {
-            setError(result.error);
+            if (!result) {
+                setError('Sign-in failed: no response');
+                console.error("No result returned from signIn");
+            } else if (result.error) {
+                setError(result.error);
+                console.error("Sign-in error:", result.error);
+            }
+        } catch (err) {
+            setError('Sign-in request failed');
+            console.error("Error during sign-in:", err);
         }
     };
+
 
     return (
         <div>
@@ -31,6 +41,6 @@ const Auth = () => {
             )}
         </div>
     );
-}
+};
 
 export default Auth;
